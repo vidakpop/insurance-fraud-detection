@@ -1,0 +1,117 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-image: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url("img1.png");
+    background-size: cover;
+    background-position: center; 
+   
+}
+header{
+    height: 60px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+  z-index: 2;
+}
+#logo{
+    line-height: 60px;
+    margin-left: 40px;
+    display: inline-block;
+  cursor: pointer;
+  font-size: 30px;
+  font-weight: bold;
+  color: #00a7ff; /* blue */
+}
+#logo:hover{
+    color: #eef9ff; /* white */
+}
+#logo-s{
+  color: #eef9ff; /* white */
+  margin-left: 5px;
+}
+#logo:hover #logo-s{
+  color: #00a7ff; /* blue */
+}
+.sign{
+  float: right;
+  line-height: 60px;
+  margin-right: 40px;
+}
+.sign a{
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+}
+.act{
+  border: 2px solid #fff;
+  border-radius: 50px;
+  padding: 6px 15px;
+}
+.sign a:hover{
+  color: #00a7ff; /* blue */
+  border-color: #00a7ff; /* blue */
+}
+
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    backdrop-filter: blur(10px);
+    animation: fadeIn 2s ease-in-out;
+  }
+
+.welcome-section {
+    margin-bottom: 20px;
+    font-weight: bold;
+	color: #00a7ff;
+}
+
+.welcome-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px #00a7ff;;
+}
+
+.main-content {
+    margin-top: 30px;
+    font-weight: bold;
+	color: #00a7ff;
+}
+
+.dropdown-container {
+    margin: 20px auto;
+    display: inline-block;
+}
+
+.dropdown {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #45a29e;
+    border-radius: 5px;
+    background-color: #1f2833;
+    color: #66fcf1;
+}
+
+.dropdown option {
+    background-color: #0b0c10;
+}
+
+.proceed-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    background-color: #45a29e;
+    color: #0b0c10;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.proceed-button:hover {
+    background-color: #66fcf1;
+}

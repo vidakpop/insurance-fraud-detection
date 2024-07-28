@@ -1,0 +1,203 @@
+{%load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AMINI AI</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body style="height: 2000px;">
+	<header>
+		<div id="logo">AMINI<span id="logo-s">AI</span></div>
+		{% csrf_token %}
+		<span class="sign"><a class="act" href="{%url 'userauths:signup'%}">SIGN UP</a></span>
+		<span class="sign"><a href="{%url 'userauths:login'%}">SIGN IN</a></span>
+	</header>
+	
+    <div class="slider">
+		<!-- fade css -->
+		<div class="myslide fade">
+			<div class="txt">
+				<h1>WELCOME to Amini</h1>
+				<p>an AI<br> that detects fraud claims in insurance</p>
+			</div>
+			<img src="{% static 'img1.png' %}" style="width: 100%; height: 100%;">
+		</div>
+		
+		<div class="myslide fade">
+			<div class="txt">
+				<h1>Hey you🫵🏽</h1>
+				<p>Gotten into an accident <br>and in need of making a claim</p>
+			</div>
+			<img src="{% static 'img2.jpg' %}" style="width: 100%; height: 100%;">
+		</div>
+		
+		<div class="myslide fade">
+			<div class="txt">
+				<h1>Worry less</h1>
+				<p>No need <br>of lots of paperwork to make a claim</p>
+			</div>
+			<img src="{% static 'img3.jpg' %}" style="width: 100%; height: 100%;">
+		</div>
+		
+		<div class="myslide fade">
+			<div class="txt">
+				<h1>Amini comes to the rescue</h1>
+				<p>fill in your claim<br>and let the magic happen</p>
+			</div>
+			<img src="{% static 'img4.jpg' %}" style="width: 100%; height: 100%;">
+		</div>
+		
+		<div class="myslide fade">
+			<div class="txt">
+				<h1>We all are happy😊</h1>
+				<p>Get your claim<br> you and the insurer saves money</p>
+			</div>
+			<img src="{% static 'img5.jpg' %}" style="width: 100%; height: 100%;">
+		</div>
+		<!-- /fade css -->
+		
+		<!-- onclick js -->
+		<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+  		<a class="next" onclick="plusSlides(1)">&#10095;</a>
+		
+		<div class="dotsbox" style="text-align:center">
+			<span class="dot" onclick="currentSlide(1)"></span>
+			<span class="dot" onclick="currentSlide(2)"></span>
+			<span class="dot" onclick="currentSlide(3)"></span>
+			<span class="dot" onclick="currentSlide(4)"></span>
+			<span class="dot" onclick="currentSlide(5)"></span>
+		</div>
+		<!-- /onclick js -->
+	</div>
+	<style>
+		/* CSS Reset */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-image: url('static/img1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+ 
+		
+ 
+		.container {
+			max-width: 960px;
+			margin: 0 auto;
+			padding: 20px;
+		}
+		
+ 
+		
+		nav ul {
+			list-style-type: none;
+			text-align: center;
+		}
+ 
+		
+ 
+		section {
+			margin: 20px;
+			background-color: rgba(255, 255, 255, 0.6); /* Adding a semi-transparent white background */
+			padding: 20px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+			color: #333; /* Text color set to grey (#333) */
+		}
+		
+		h2 {
+			color: #333;
+		}
+		
+		footer {
+			background-color: rgba(0, 0, 0, 0.6); /* Adding a semi-transparent background overlay */
+			color: #fff;
+			text-align: center;
+			padding: 10px 0;
+		}
+		
+	</style>
+	<div class="container">
+		<section>
+			<h2>Welcome to Amini AI</h2>
+			<p>Experience unparalleled fraud detection and prevention with Amini AI, your trusted partner in safeguarding your business against fraud and financial crimes.</p>
+		</section>
+	
+		<section>
+			<h2>About Us</h2>
+			<p>Amini AI is a cutting-edge provider of AI-driven fraud detection solutions. Our mission is to help businesses stay ahead of fraudsters with our state-of-the-art technology. We offer a comprehensive suite of tools designed to identify and prevent fraudulent activities in real-time. Our dedicated team of experts continuously works to enhance our algorithms and keep your business protected. At Amini AI, we are committed to delivering reliable, efficient, and innovative fraud detection services to safeguard your financial assets and maintain trust in your operations.</p>
+		</section>
+	
+		<section>
+			<h2>Our Services</h2>
+			<h3>Advanced Fraud Detection Algorithms</h3>
+			<p>Leverage our sophisticated AI algorithms to detect fraudulent activities with high accuracy and minimal false positives.</p>
+			<h3>Real-Time Monitoring</h3>
+			<p>Benefit from continuous monitoring and instant alerts to respond to potential fraud incidents as they occur.</p>
+			<h3>Customizable Solutions</h3>
+			<p>Tailor our fraud detection tools to fit the unique needs and risk profiles of your business for maximum protection.</p>
+			<h3>24/7 Expert Support</h3>
+			<p>Access our team of fraud specialists around the clock to assist with any issues and ensure uninterrupted security for your operations.</p>
+		</section>
+	</div>
+	
+ 
+	  <footer>
+        <div class="container">
+            <p>17 Athi- River,<br> Daystar University, off Mombasa Rd<br>
+            | admin@gnetwifi.com |<br> Tel: 0204402855/0795480710</p>
+        </div>
+
+        <div class="team-grid">
+            <div class="container">
+                <div class="intro">
+                    <h2 class="text-center">Meet the developer</h2>
+                    <p class="text-center">Here is the developer who developed the system, you can contact him at anytime</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="team-clean">
+            <div class="container">
+                <div class="row people">
+                    <div class="col-md-6 col-lg-4 item">
+                        <img class="rounded-circle" src="{% static 'assets/images/image.jpg' %}" alt="Developer Image">
+                        <h3 class="name">Davis Kiprop</h3>
+                        <p class="title">Developer</p>
+                        <div class="social">
+                            <a href="#"><i class="fab fa-github">vidakpop</i></a>
+                            <a href="#"><i class="fab fa-twitter">@DavisKiprop3</i></a>
+                            <a href="#"><i class="fab fa-linkedin">vidakpop</i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="social">
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+        </div>
+
+        <ul class="list-inline">
+            <li class="list-inline-item"><a href="#">Services</a></li>
+            <li class="list-inline-item"><a href="#">Send Feedback</a></li>
+            <li class="list-inline-item"><a href="#">Terms</a></li>
+            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+        </ul>
+
+        <p class="copyright">© 2023</p>
+    </footer>
+
+<script src="{% static 'script.js' %}"></script>
+</body>
+</html>
+

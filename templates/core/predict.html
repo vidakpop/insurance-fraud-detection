@@ -1,0 +1,784 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insurance Fraud Detection</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      line-height: 1.6;
+      color: #fff;
+      background: #0f2027; /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #2c5364, #203a43, #0f2027); /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+      background-attachment: fixed;
+      overflow: hidden;
+    }
+    header{
+      height: 60px;
+      width: 100%;
+      position: absolute;
+      top: 0;
+    z-index: 2;
+  }
+  #logo{
+      line-height: 60px;
+      margin-left: 40px;
+      display: inline-block;
+    cursor: pointer;
+    font-size: 30px;
+    font-weight: bold;
+    color: #00a7ff; /* blue */
+  }
+  #logo:hover{
+      color: #eef9ff; /* white */
+  }
+  #logo-s{
+    color: #eef9ff; /* white */
+    margin-left: 5px;
+  }
+  #logo:hover #logo-s{
+    color: #00a7ff; /* blue */
+  }
+  .sign{
+    float: right;
+    line-height: 60px;
+    margin-right: 40px;
+  }
+  .sign a{
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  .act{
+    border: 2px solid #fff;
+    border-radius: 50px;
+    padding: 6px 15px;
+  }
+  .sign a:hover{
+    color: #00a7ff; /* blue */
+    border-color: #00a7ff; /* blue */
+  }
+
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+      backdrop-filter: blur(10px);
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    h1 {
+      text-align: center;
+      color: #00d4ff;
+      animation: textFadeIn 3s ease-in-out;
+    }
+
+    @keyframes textFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    form div {
+      flex: 0 0 48%;
+      margin-bottom: 10px;
+    }
+
+    form label {
+      display: block;
+      font-weight: bold;
+      color: #00d4ff;
+      margin-bottom: 5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: #00d4ff;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    input:focus, select:focus {
+      background-color: rgba(0, 0, 0, 0.8);
+      transform: scale(1.05);
+    }
+
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      position: relative;
+      bottom: 10px;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+      transform: scale(1.1);
+    }
+
+    #prevBtn, #nextBtn, #submitBtn {
+      position: absolute;
+      bottom: 10px;
+      padding: 10px 20px;
+    }
+
+    #prevBtn {
+      left: 10px;
+    }
+
+    #nextBtn {
+      right: 10px;
+    }
+
+    #submitBtn {
+      right: 10px;
+      display: none;
+    }
+
+    #result {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 20px;
+      color: #00d4ff;
+      animation: resultFadeIn 2s ease-in-out;
+    }
+
+    @keyframes resultFadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .input-section {
+      display: none;
+      position: relative;
+      animation: sectionFadeIn 1s ease-in-out;
+    }
+
+    @keyframes sectionFadeIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .input-section button {
+      position: absolute;
+      bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+		<div id="logo">AMINI<span id="logo-s">AI</span></div>
+		<span class="sign"><a class="act" href="{%url 'core:index'%}">HOME</a></span>
+		<span class="sign"><a href="{%url 'userauths:login'%}">LOG OUT</a></span>
+	</header>
+  <div class="container">
+    <h1>Insurance Fraud Detection</h1>
+    <form id="prediction-form" action="result">
+      {% csrf_token %}
+      <!-- Customer Information -->
+      <div class="input-section" id="customer-info">
+        <h2>Customer Information</h2>
+        <div>
+          <label for="months_as_customer">Months as Customer:</label>
+          <input type="number" id="months_as_customer" name="months_as_customer" value="328">
+        </div>
+        <div>
+          <label for="policy_deductable">Policy Deductible:</label>
+          <input type="number" id="policy_deductable" name="policy_deductable" value="1000">
+        </div>
+        <div>
+          <label for="insured_sex_male">Male:</label>
+          <select id="insured_sex_male" name="insured_sex_male">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </div>
+        <!-- Add more customer information fields as needed -->
+      </div>
+      <!-- Financial Information -->
+      <div class="input-section" id="financial-info">
+        <h2>Financial Information</h2>
+        <div>
+          <label for="umbrella_limit">Umbrella Limit:</label>
+          <input type="number" id="umbrella_limit" name="umbrella_limit" value="0">
+        </div>
+        <div>
+          <label for="capital_gains">Capital Gains:</label>
+          <input type="number" id="capital_gains" name="capital_gains" value="53300">
+        </div>
+        <div>
+          <label for="capital_loss">Capital Loss:</label>
+          <input type="number" id="capital_loss" name="capital_loss" value="0">
+        </div>
+        <!-- Add more financial information fields as needed -->
+      </div>
+      <!-- Claim Information Part 1 -->
+      <div class="input-section" id="claim-info-1">
+        <h2>Claim Information (Part 1)</h2>
+        <div>
+          <label for="incident_hour_of_the_day">Incident Hour of the Day:</label>
+          <input type="number" id="incident_hour_of_the_day" name="incident_hour_of_the_day" value="0">
+        </div>
+        <div>
+          <label for="number_of_vehicles_involved">No. of Vehicles Involved:</label>
+          <input type="number" id="number_of_vehicles_involved" name="number_of_vehicles_involved" value="0">
+        </div>
+        <div>
+          <label for="bodily_injuries">Bodily Injuries:</label>
+          <input type="number" id="bodily_injuries" name="bodily_injuries" value="0">
+        </div>
+        <div>
+          <label for="witnesses">Witnesses:</label>
+          <input type="number" id="witnesses" name="witnesses" value="0">
+        </div>
+      </div>
+      <!-- Claim Information Part 2 -->
+      <div class="input-section" id="claim-info-2">
+        <h2>Claim Information (Part 2)</h2>
+        <div>
+          <label for="injury_claim">Injury Claim:</label>
+          <input type="number" id="injury_claim" name="injury_claim" value="0">
+        </div>
+        <div>
+          <label for="property_claim">Property Claim:</label>
+          <input type="number" id="property_claim" name="property_claim" value="0">
+        </div>
+        <div>
+          <label for="vehicle_claim">Vehicle Claim:</label>
+          <input type="number" id="vehicle_claim" name="vehicle_claim" value="0">
+        </div>
+        <!-- Add more claim information fields as needed -->
+      </div>
+      <!-- Policy CSL -->
+      <div class="input-section" id="policy-csl">
+        <h2>Policy CSL</h2>
+        <div>
+          <label for="policy_csl_250_500">Policy CSL 250/500:</label>
+          <select id="policy_csl_250_500" name="policy_csl_250_500">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </select>
+        </div>
+        <div>
+          <label for="policy_csl_500_1000">Policy CSL 500/1000:</label>
+          <select id="policy_csl_500_1000" name="policy_csl_500_1000">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </select>
+        </div>
+      </div>
+      <!-- Insured Education Level -->
+  <div class="input-section"> 
+    <h2>Insured Education Level</h2>
+    <div>
+        <label for="insured_education_level_college">College:</label>
+        <select id="insured_education_level_college" name="insured_education_level_college">
+            <option value="0">No</option>
+            <option value="1">Y</option>
+        </select>
+    </div>
+    <div>
+        <label for="insured_education_level_high_school">High School:</label>
+        <select id="insured_education_level_high_school" name="insured_education_level_high_school">
+            <option value="0">No</option>
+            <option value="1">Y</option>
+        </select>
+    </div>
+    <div>
+        <label for="insured_education_level_jd">JD:</label>
+        <select id="insured_education_level_jd" name="insured_education_level_jd">
+            <option value="0">No</option>
+            <option value="1">Y</option>
+        </select>
+    </div>
+    <div>
+        <label for="insured_education_level_md">MD:</label>
+        <select id="insured_education_level_md" name="insured_education_level_md">
+            <option value="0">No</option>
+            <option value="1">Y</option>
+        </select>
+    </div>
+    
+</div>
+<div class="input-section"
+    <h2>Education level 2</h2>
+    <div>
+      <label for="insured_education_level_masters">Masters:</label>
+      <select id="insured_education_level_masters" name="insured_education_level_masters">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+  </div>
+  <div>
+      <label for="insured_education_level_phd">PhD:</label>
+      <select id="insured_education_level_phd" name="insured_education_level_phd">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+  </div>
+</div>
+        
+
+<!-- Insured Occupation -->
+<div class="input-section">
+    <h2>Insured Occupation</h2>
+    <div>
+        <label for="insured_occupation_armed_forces">Armed Forces:</label>
+        <select id="insured_occupation_armed_forces" name="insured_occupation_armed_forces">
+            <option value="0">No</option>
+            <option value="1">Y</option>
+        </select>
+    </div>
+    <div>
+        <label for="insured_occupation_craft_repair">Craft Repair:</label>
+        <select id="insured_occupation_craft_repair" name="insured_occupation_craft_repair">
+            <option value="0">No</option>
+            <option value="1">Y</option>
+        </select>
+    </div>
+    <div>
+      <label for="insured_occupation_exec-managerial">exec-manageria:</label>
+      <select id="insured_occupation_exec-managerial" name="insured_occupation_exec-managerial">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+  </div>
+  <div>
+    <label for="insured_occupation_farming-fishing">arming-fishing:</label>
+    <select id="insured_occupation_farming-fishing" name="insured_occupation_farming-fishing">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+
+</div>
+<div class="input-section"
+    <h2>Insured Occupation Part 2</h2>
+    <div>
+      <label for="insured_occupation_handlers-cleaners">handlers-cleaners:</label>
+      <select id="insured_occupation_handlers-cleaners" name="insured_occupation_handlers-cleaners">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+    </div>
+    <div>
+    <label for="insured_occupation_machine-op-inspct">machine-op-inspct:</label>
+    <select id="insured_occupation_machine-op-inspct" name="insured_occupation_machine-op-inspct">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+    </div>
+    <div>
+    <label for="insured_occupation_other-service">other-service:</label>
+    <select id="insured_occupation_other-service" name="insured_occupation_other-service">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+    </div>
+    <div>
+    <label for="insured_occupation_priv-house-serv">priv-house-serv:</label>
+    <select id="insured_occupation_priv-house-serv" name="insured_occupation_priv-house-serv">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+    </div>
+    
+  </div>
+  <div class="input-section"
+    <h2>Insured Occupation Part 3</h2>
+    <div>
+      <label for="insured_occupation_prof-specialty">prof-specialty:</label>
+      <select id="insured_occupation_prof-specialty" name="insured_occupation_prof-specialty">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+      </div>
+      <div>
+      <label for="insured_occupation_protective-serv">protective-serv:</label>
+      <select id="insured_occupation_protective-serv" name="insured_occupation_protective-serv">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+      </div>
+      <div>
+      <label for="insured_occupation_sales">sales:</label>
+      <select id="insured_occupation_sales" name="insured_occupation_sales">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+      </div>
+      <div>
+      <label for="insured_occupation_tech_support">tech-support :</label>
+      <select id="insured_occupation_tech_support" name="insured_occupation_tech_support">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+      </div>
+      <div>
+      <label for="insured_occupation_transport-moving">transport-moving:</label>
+      <select id="insured_occupation_transport-moving" name="insured_occupation_transport-moving">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+      </div>
+    </div>
+
+
+<!-- Insured Relationship -->
+<div class="input-section">
+    <h2>Insured Relationship</h2>
+    <div>
+        <label for="insured_relationship_not_in_family">Not in Family:</label>
+        <select id="insured_relationship_not_in_family" name="insured_relationship_not_in_family">
+            <option value="0">No</option>
+            <option value="1">Y</option>
+        </select>
+    </div>
+    <div>
+      <label for="insured_relationship_other-relative">other-relative:</label>
+      <select id="insured_relationship_other-relative" name="insured_relationship_other-relative">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+  </div>
+  <div>
+    <label for="insured_relationship_own-child">own-child:</label>
+    <select id="insured_relationship_own-child" name="insured_relationship_own-child">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+<div>
+  <label for="insured_relationship_unmarried">unmarried :</label>
+  <select id="insured_relationship_unmarried" name="insured_relationship_unmarried">
+      <option value="0">No</option>
+      <option value="1">Y</option>
+  </select>
+</div>
+<div>
+<label for="insured_relationship_wife">wife :</label>
+<select id="insured_relationship_wife" name="insured_relationship_wife">
+    <option value="0">No</option>
+    <option value="1">Y</option>
+</select>
+</div>
+</div>
+<!-- Incident Type -->
+<div class="input-section">
+    <h2>Incident Type</h2>
+    <div>
+        <label for="incident_type_parked_car">Parked Car:</label>
+        <select id="incident_type_parked_car" name="incident_type_parked_car">
+            <option value="0">No</option>
+            <option value="1">Y</option>
+        </select>
+    </div>
+    <div>
+      <label for="incident_type_parked_Single Vehicle Collision">Single Vehicle Collision:</label>
+      <select id="incident_type_parked_Single Vehicle Collision" name="incident_type_parked_Single Vehicle Collision">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+  </div>
+  <div>
+    <label for="incident_type_Vehicle Theft">Vehicle Theft:</label>
+    <select id="incident_type_Vehicle Theft" name="incident_type_Vehicle Theft">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+</div>
+<!-- Collision Type -->
+<div class="input-section">
+    <h2>Collision Type</h2>
+    <div>
+        <label for="collision_type_rear_collision">Rear Collision:</label>
+        <select id="collision_type_rear_collision" name="collision_type_rear_collision">
+            <option value="0">No</option>
+            <option value="1">Y</option>
+        </select>
+    </div>
+    <div>
+      <label for="collision_type_Side Collision">Side Collision:</label>
+      <select id="collision_type_Side Collision" name="collision_type_Side Collision">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+  </div>
+</div>
+<div>
+<!-- Incident Severity -->
+<div class="input-section">
+    <h2>Incident Severity</h2>
+    <div>
+        <label for="incident_severity_minor_damage">Minor Damage:</label>
+        <select id="incident_severity_minor_damage" name="incident_severity_minor_damage">
+            <option value="0">No</option>
+            <option value="1">Y</option>
+        </select>
+    </div>
+    <div>
+      <label for="incident_severity_Total Loss">Total Loss:</label>
+      <select id="incident_severity_Total Loss" name="incident_severity_Total Loss">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+  </div>
+  <div>
+    <label for="incident_severity_Trivial Damage">Trivial Damage:</label>
+    <select id="incident_severity_Trivial Damage" name="incident_severity_Trivial Damage">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+</div>
+<!-- Authorities Contacted -->
+<div class="input-section">
+    <h2>Authorities Contacted</h2>
+    <div>
+        <label for="authorities_contacted_fire">Fire:</label>
+        <select id="authorities_contacted_fire" name="authorities_contacted_fire">
+            <option value="0">No</option>
+            <option value="1">Y</option>
+        </select>
+    </div>
+    <div>
+      <label for="authorities_contacted_None">None:</label>
+      <select id="authorities_contacted_None" name="authorities_contacted_None">
+          <option value="0">No</option>
+          <option value="1">Y</option>
+      </select>
+  </div>
+  <div>
+    <label for="authorities_contacted_Other">Other:</label>
+    <select id="authorities_contacted_Other" name="authorities_contacted_Other">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+<div>
+  <label for="authorities_contacted_Police">Police:</label>
+  <select id="authorities_contacted_Police" name="authorities_contacted_Police">
+      <option value="0">No</option>
+      <option value="1">Y</option>
+  </select>
+</div>
+</div>
+<!-- Property Damage -->
+<div class="input-section">
+    <h2>Property Damage</h2>
+    <div>
+        <label for="property_damage_yes">Yes:</label>
+        <select id="property_damage_yes" name="property_damage_yes">
+            <option value="0">No</option>
+            <option value="1">Y</option>
+        </select>
+    </div>
+</div>
+<!-- Police Report Available -->
+<div class="input-section">
+    <h2>Police Report Available</h2>
+    <div>
+        <label for="police_report_available_yes">Yes:</label>
+        <select id="police_report_available_yes" name="police_report_available_yes">
+            <option value="0">No</option>
+            <option value="1">Y</option>
+        </select>
+    </div>
+</div>
+<!-- Auto Make -->
+<div class="input-section">
+<h2>Auto Make</h2>
+<div>
+    <label for="auto_make_audi">Audi:</label>
+    <select id="auto_make_audi" name="auto_make_audi">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+<div>
+    <label for="auto_make_bmw">BMW:</label>
+    <select id="auto_make_bmw" name="auto_make_bmw">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+<div>
+    <label for="auto_make_chevrolet">Chevrolet:</label>
+    <select id="auto_make_chevrolet" name="auto_make_chevrolet">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+<div>
+    <label for="auto_make_dodge">Dodge:</label>
+    <select id="auto_make_dodge" name="auto_make_dodge">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+<div>
+    <label for="auto_make_ford">Ford:</label>
+    <select id="auto_make_ford" name="auto_make_ford">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+
+</div>
+<!-- Auto Model -->
+ <div class="input-section">
+  <h2>Auto Model Part 2</h2>
+  <div>
+    <label for="auto_make_honda">Honda:</label>
+    <select id="auto_make_honda" name="auto_make_honda">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+<div>
+    <label for="auto_make_jeep">Jeep:</label>
+    <select id="auto_make_jeep" name="auto_make_jeep">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+<div>
+    <label for="auto_make_mercedes">Mercedes:</label>
+    <select id="auto_make_mercedes" name="auto_make_mercedes">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+<div>
+    <label for="auto_make_nissan">Nissan:</label>
+    <select id="auto_make_nissan" name="auto_make_nissan">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+
+</div>
+<!-- Auto Model -->
+ <div class="input-section">
+  <h2>Auto Model Part 3</h2>
+  <div>
+    <label for="auto_make_saab">Saab:</label>
+    <select id="auto_make_saab" name="auto_make_saab">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+<div>
+    <label for="auto_make_suburu">Suburu:</label>
+    <select id="auto_make_suburu" name="auto_make_suburu">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+<div>
+    <label for="auto_make_toyota">Toyota:</label>
+    <select id="auto_make_toyota" name="auto_make_toyota">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+<div>
+    <label for="auto_make_volkswagen">Volkswagen:</label>
+    <select id="auto_make_volkswagen" name="auto_make_volkswagen">
+        <option value="0">No</option>
+        <option value="1">Y</option>
+    </select>
+</div>
+ </div>
+
+      <!-- Buttons -->
+      <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+      <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+      <button type="submit" id="submitBtn">Submit</button>
+    </form>
+    <div id="result"></div>
+  </div>
+  <script>
+    var currentTab = 0;
+    showTab(currentTab);
+
+    function showTab(n) {
+      var x = document.getElementsByClassName("input-section");
+      x[n].style.display = "block";
+      if (n == 0) {
+        document.getElementById("prevBtn").style.display = "none";
+      } else {
+        document.getElementById("prevBtn").style.display = "inline";
+      }
+      if (n == (x.length - 1)) {
+        document.getElementById("nextBtn").style.display = "none";
+        document.getElementById("submitBtn").style.display = "inline";
+      } else {
+        document.getElementById("nextBtn").style.display = "inline";
+        document.getElementById("submitBtn").style.display = "none";
+      }
+    }
+
+    function nextPrev(n) {
+      var x = document.getElementsByClassName("input-section");
+      x[currentTab].style.display = "none";
+      currentTab = currentTab + n;
+      if (currentTab >= x.length) {
+        document.getElementById("prediction-form").submit();
+        return false;
+      }
+      showTab(currentTab);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('{{ loading_image }}') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        header {
+            height: 60px;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            
+            
+        }
+        #logo {
+            font-size: 30px;
+            font-weight: bold;
+            color: #00a7ff; /* blue */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        #logo:hover {
+            color: #eef9ff; /* white */
+        }
+        #logo-s {
+            color: #eef9ff; /* white */
+            margin-left: 5px;
+        }
+        #logo:hover #logo-s {
+            color: #00a7ff; /* blue */
+        }
+        .sign {
+            display: flex;
+            align-items: center;
+        }
+        .sign a {
+            color: #fff;
+            font-weight: bold;
+            text-decoration: none;
+            margin-left: 20px;
+            border: 2px solid transparent;
+            padding: 6px 15px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        .sign a.act {
+            border-color: #fff;
+        }
+        .sign a:hover {
+            color: #00a7ff; /* blue */
+            border-color: #00a7ff; /* blue */
+        }
+        .overlay {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+        .congrats {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .loading {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .result {
+            display: none;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        @keyframes loadingAnimation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: loadingAnimation 2s linear infinite;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    
+    <header>
+        <div id="logo">AMINI<span id="logo-s">AI</span></div>
+        <span class="sign"><a class="act" href="{%url 'core:index'%}">HOME</a></span>
+        <span class="sign"><a href="{% url 'userauths:login'%}">LOG OUT</a></span>
+    </header>
+    <div class="overlay">
+        <div class="congrats">Congratulations on completing the questions!</div>
+        <div class="loading">Loading your result...</div>
+        <div class="loader"></div>
+        <div class="result" id="result">
+            <p>{{ prediction_text }}</p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.body.style.backgroundImage = "url('{{ mood_image }}')";
+                document.querySelector('.loading').style.display = 'none';
+                document.querySelector('.loader').style.display = 'none';
+                document.querySelector('.result').style.display = 'block';
+            }, 3000); // Adjust the time as needed
+        });
+    </script>
+</body>
+</html>
